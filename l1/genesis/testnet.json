@@ -1,0 +1,42 @@
+{
+  "config": {
+    "chainId": 43214321,
+    "feeConfig": {
+      "gasLimit": 30000000,
+      "minBaseFee": 1000000000,
+      "targetGas": 15000000,
+      "baseFeeChangeDenominator": 48,
+      "minBlockGasCost": 0,
+      "maxBlockGasCost": 10000000,
+      "targetBlockRate": 2,
+      "blockGasCostStep": 500000
+    },
+    "verifyUltraHonkConfig": {
+      "blockTimestamp": 0
+    },
+    "poseidonHashConfig": {
+      "blockTimestamp": 0
+    },
+    "merkleTreeInsertConfig": {
+      "blockTimestamp": 0
+    },
+    "merkleTreeVerifyConfig": {
+      "blockTimestamp": 0
+    }
+  },
+  "alloc": {
+    "8db97C7cEcE249c2b98bDC0226Cc4C2A57BF52FC": {
+      "balance": "0x295BE96E64066972000000"
+    }
+  },
+  "nonce": "0x0",
+  "timestamp": "0x0",
+  "extraData": "0x00",
+  "gasLimit": "0x1C9C380",
+  "difficulty": "0x0",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0x0000000000000000000000000000000000000000",
+  "number": "0x0",
+  "gasUsed": "0x0",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+}

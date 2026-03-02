@@ -1,0 +1,19 @@
+[
+  {
+    "inputs": [
+      {
+        "name": "inputs",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "hash",
+    "outputs": [
+      {
+        "name": "result",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]

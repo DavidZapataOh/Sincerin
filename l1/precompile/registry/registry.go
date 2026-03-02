@@ -9,9 +9,13 @@ package registry
 import (
 	_ "github.com/sincerin/l1/precompile/contracts/deployerallowlist"
 	_ "github.com/sincerin/l1/precompile/contracts/feemanager"
+	_ "github.com/sincerin/l1/precompile/contracts/merkletreeinsert"
+	_ "github.com/sincerin/l1/precompile/contracts/merkletreeverify"
 	_ "github.com/sincerin/l1/precompile/contracts/nativeminter"
+	_ "github.com/sincerin/l1/precompile/contracts/poseidonhash"
 	_ "github.com/sincerin/l1/precompile/contracts/rewardmanager"
 	_ "github.com/sincerin/l1/precompile/contracts/txallowlist"
+	_ "github.com/sincerin/l1/precompile/contracts/verifyultrahonk"
 	_ "github.com/sincerin/l1/precompile/contracts/warp"
 )
 
@@ -33,5 +37,8 @@ import (
 // FeeManagerAddress                = common.HexToAddress("0x0200000000000000000000000000000000000003")
 // RewardManagerAddress             = common.HexToAddress("0x0200000000000000000000000000000000000004")
 // WarpAddress                      = common.HexToAddress("0x0200000000000000000000000000000000000005")
-// ADD YOUR PRECOMPILE HERE
-// {YourPrecompile}Address          = common.HexToAddress("0x03000000000000000000000000000000000000??")
+// Sincerin custom precompiles (0x0300... range):
+// VerifyUltraHonkAddress           = common.HexToAddress("0x0300000000000000000000000000000000000002")
+// PoseidonHashAddress              = common.HexToAddress("0x0300000000000000000000000000000000000003")
+// MerkleTreeInsertAddress          = common.HexToAddress("0x0300000000000000000000000000000000000004")
+// MerkleTreeVerifyAddress          = common.HexToAddress("0x0300000000000000000000000000000000000005")
