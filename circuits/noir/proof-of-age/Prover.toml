@@ -1,0 +1,30 @@
+# Prover inputs for proof-of-age
+# Test vector: birthdate=2000-01-01, identity_hash=42, issuer_pubkey=1234
+# current_timestamp=2026-03-01, threshold_age=18
+# All Poseidon2 hashes computed via sincerin_poseidon helper circuit
+
+# --- Private inputs ---
+# Unix timestamp: 2000-01-01 00:00:00 UTC = 946684800
+birthdate = "946684800"
+# Hash of identity document
+identity_hash = "42"
+# Poseidon MAC: hash_3(identity_hash, birthdate, issuer_pubkey)
+signature = "0x046f001ca2cffdf181670d9916594203d60eb831997a29038b631e12b11e2d91"
+# Position in registry tree
+identity_index = 0
+# Merkle sibling hashes (all zeros for test)
+identity_path = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]
+
+# --- Public inputs ---
+# Minimum age in years
+threshold_age = 18
+# Unix timestamp: 2026-03-01 00:00:00 UTC = 1772438400
+current_timestamp = "1772438400"
+# Issuer public key (Poseidon MAC key)
+issuer_pubkey = "1234"
+# Merkle root: compute_root(identity_hash=42, index=0, path=[0;20])
+identity_registry_root = "0x0dce07a2fc76660874a1eb53efb1d1228dcbefa1cc4a3f6463f59e7cbfa11907"
+# Credential commitment: 570-round Poseidon2 hash chain
+credential_commitment = "0x049f96ad2b3b7b927b74c30422a9daef7f3c2237d3e652a5acf56b76885e932b"
+# User is 26 years old, which is >= 18
+is_over_threshold = true

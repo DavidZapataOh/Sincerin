@@ -1,0 +1,28 @@
+{
+  "proof-of-membership": {
+    "acir": "noir/proof-of-membership/target/proof_of_membership.json",
+    "provingKey": "noir/proof-of-membership/target/vk/vk",
+    "verificationKey": "noir/proof-of-membership/target/vk/vk",
+    "verificationKeyHash": "0895f036276e33e6de651b1d26e55897558ecad13e27ff98f7b66c278d6ae76e",
+    "exampleProof": "noir/proof-of-membership/target/test_proof/proof",
+    "examplePublicInputs": "noir/proof-of-membership/target/test_proof/public_inputs",
+    "exampleWitness": "noir/proof-of-membership/target/proof_of_membership.gz",
+    "constraintCount": 8844,
+    "acirOpcodes": 301,
+    "proofSize": 16256,
+    "vkSize": 3680
+  },
+  "proof-of-age": {
+    "acir": "noir/proof-of-age/target/proof_of_age.json",
+    "provingKey": "noir/proof-of-age/target/vk/vk",
+    "verificationKey": "noir/proof-of-age/target/vk/vk",
+    "verificationKeyHash": "1bbf67c66675bd16c52ce13fd3c079756490ca053e31e82d6266065cb3e3afe1",
+    "exampleProof": "noir/proof-of-age/target/test_proof/proof",
+    "examplePublicInputs": "noir/proof-of-age/target/test_proof/public_inputs",
+    "exampleWitness": "noir/proof-of-age/target/proof_of_age.gz",
+    "constraintCount": 50541,
+    "acirOpcodes": 915,
+    "proofSize": 16256,
+    "vkSize": 3680
+  }
+}

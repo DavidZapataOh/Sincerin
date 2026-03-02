@@ -1,0 +1,7 @@
+# Verifier inputs (public only) for proof-of-membership
+# Corresponds to Prover.toml test vector: leaf=42, index=0, all-zero sibling path
+
+# root = compute_root(leaf=42, index=0, path=[0;20])
+root = "0x0dce07a2fc76660874a1eb53efb1d1228dcbefa1cc4a3f6463f59e7cbfa11907"
+# nullifier = poseidon_hash_2(leaf=42, index=0)
+nullifier = "0x1e7981f857394b926eee0742ad9104aa612ffe6873522a4eccaab935b2ff3c96"

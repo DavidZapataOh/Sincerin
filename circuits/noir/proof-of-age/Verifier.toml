@@ -1,0 +1,15 @@
+# Verifier inputs (public only) for proof-of-age
+# These are the public inputs the verifier checks against
+
+# Minimum age in years
+threshold_age = 18
+# Unix timestamp: 2026-03-01 00:00:00 UTC
+current_timestamp = "1772438400"
+# Issuer public key (Poseidon MAC key)
+issuer_pubkey = "1234"
+# Merkle root of identity registry
+identity_registry_root = "0x0dce07a2fc76660874a1eb53efb1d1228dcbefa1cc4a3f6463f59e7cbfa11907"
+# Credential commitment (570-round Poseidon2 hash chain)
+credential_commitment = "0x049f96ad2b3b7b927b74c30422a9daef7f3c2237d3e652a5acf56b76885e932b"
+# User meets the age threshold
+is_over_threshold = true

@@ -1,0 +1,9 @@
+[package]
+name = "proof_of_membership"
+type = "bin"
+authors = ["Sincerin Team"]
+compiler_version = ">=0.36.0"
+
+[dependencies]
+sincerin_poseidon = { path = "../lib/poseidon" }
+sincerin_merkle = { path = "../lib/merkle" }

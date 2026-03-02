@@ -1,0 +1,31 @@
+{
+  "circuits": [
+    {
+      "id": "proof-of-membership",
+      "name": "Proof of Membership",
+      "description": "Merkle inclusion proof without revealing position or leaf value",
+      "language": "noir",
+      "proofSystem": "UltraHonk",
+      "actualConstraints": 8844,
+      "clientSideFeasible": true,
+      "estimatedClientTime": "<1s",
+      "splitProvingSupported": false,
+      "publicInputs": ["root", "nullifier"],
+      "privateInputs": ["leaf", "index", "path_elements"]
+    },
+    {
+      "id": "proof-of-age",
+      "name": "Proof of Age",
+      "description": "Verify age threshold without revealing birthdate",
+      "language": "noir",
+      "proofSystem": "UltraHonk",
+      "actualConstraints": 50541,
+      "clientSideFeasible": true,
+      "estimatedClientTime": "<3s",
+      "splitProvingSupported": true,
+      "estimatedSplitTime": "<7s",
+      "publicInputs": ["threshold_age", "current_timestamp", "issuer_pubkey", "identity_registry_root", "credential_commitment", "is_over_threshold"],
+      "privateInputs": ["birthdate", "identity_hash", "signature", "identity_index", "identity_path"]
+    }
+  ]
+}
