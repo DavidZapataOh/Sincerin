@@ -1,0 +1,7 @@
+[package]
+name = "sincerin-collector"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+sincerin-common = { path = "../common" }

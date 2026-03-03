@@ -1,0 +1,66 @@
+[package]
+name = "sincerin-gateway"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "sincerin-gateway"
+path = "src/main.rs"
+
+[dependencies]
+sincerin-common = { path = "../common" }
+
+# HTTP framework
+axum = { workspace = true, features = ["ws", "macros"] }
+tokio = { workspace = true }
+tower = { workspace = true }
+tower-http = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Message Queue
+async-nats = { workspace = true }
+
+# Observability
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+metrics = { workspace = true }
+metrics-exporter-prometheus = { workspace = true }
+
+# Config
+config = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Crypto / Identifiers
+sha2 = { workspace = true }
+hex = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+# Concurrency
+dashmap = { workspace = true }
+tokio-util = { workspace = true }
+
+# URL / Streams
+serde_urlencoded = { workspace = true }
+futures = { workspace = true }
+
+[dev-dependencies]
+tokio-test = { workspace = true }
+tokio = { workspace = true, features = ["test-util"] }
+http-body-util = { workspace = true }
+hyper = { workspace = true }
+tokio-tungstenite = { workspace = true }
+sincerin-common = { path = "../common" }
+tower = { workspace = true, features = ["util"] }
+serde_json = { workspace = true }
+axum = { workspace = true }
+chrono = { workspace = true }
+futures = { workspace = true }

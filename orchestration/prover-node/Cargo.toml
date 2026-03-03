@@ -1,0 +1,50 @@
+[package]
+name = "sincerin-prover-node"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "sincerin-prover"
+path = "src/main.rs"
+
+[dependencies]
+sincerin-common = { path = "../common" }
+
+# Async
+tokio = { workspace = true, features = ["full", "process"] }
+tokio-util.workspace = true
+futures.workspace = true
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+
+# Messaging
+async-nats.workspace = true
+
+# HTTP / Metrics
+metrics.workspace = true
+metrics-exporter-prometheus.workspace = true
+
+# Tracing
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+# Error handling
+thiserror.workspace = true
+anyhow.workspace = true
+
+# Crypto
+sha2.workspace = true
+hex.workspace = true
+
+# Time
+chrono.workspace = true
+
+# Prover-specific
+tempfile = "3"
+flate2 = "1"
+async-trait = "0.1"
+
+[dev-dependencies]
+tokio-test.workspace = true
