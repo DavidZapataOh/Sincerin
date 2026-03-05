@@ -31,10 +31,6 @@ contract ProofRegistry is IProofRegistry {
     ///      new_root (32 bytes) + leaf_index (32 bytes) = 64 bytes.
     uint256 private constant INSERT_RESULT_LENGTH = 64;
 
-    /// @dev Expected byte length of the input to MerkleTreeVerify precompile:
-    ///      proof_hash(32) + metadata(32) + leaf_index(32) + merkle_proof(32*32) + root(32)
-    ///      = 32 + 32 + 32 + 1024 + 32 = 1152 bytes.
-    uint256 private constant VERIFY_INPUT_LENGTH = 1152;
 
     // =========================================================================
     //                           IMMUTABLE STATE
@@ -165,9 +161,10 @@ contract ProofRegistry is IProofRegistry {
         bytes32 metadataHash = keccak256(abi.encodePacked(circuitId, publicInputsHash, timestamp));
 
         // --- Interaction: call MerkleTreeInsert precompile ---
-        // Input: proof_hash (32 bytes) || metadata (32 bytes) = 64 bytes total
+        // ABI: insert(bytes32 proofHash, bytes32 metadata) → (bytes32 newRoot, uint256 leafIndex)
+        // Must use call (not staticcall) because insert mutates tree state.
         (bool success, bytes memory result) =
-            merkleInsertPrecompile.staticcall(abi.encodePacked(leafHash, metadataHash));
+            merkleInsertPrecompile.call(abi.encodeWithSignature("insert(bytes32,bytes32)", leafHash, metadataHash));
         if (!success || result.length != INSERT_RESULT_LENGTH) {
             revert InsertionFailed();
         }
@@ -207,14 +204,8 @@ contract ProofRegistry is IProofRegistry {
     ///      caller-provided Merkle proof, then delegates verification to the
     ///      MerkleTreeVerify precompile.
     ///
-    ///      Precompile input layout (1152 bytes total):
-    ///        [0x00  - 0x20)  leafHash      (32 bytes)
-    ///        [0x20  - 0x40)  metadataHash  (32 bytes)
-    ///        [0x40  - 0x60)  leafIndex     (32 bytes, big-endian uint256)
-    ///        [0x60  - 0x460) merkleProof   (32 * 32 = 1024 bytes, padded with zeros)
-    ///        [0x460 - 0x480) root          (32 bytes)
-    ///
-    ///      The precompile returns 1 byte: 0x01 (valid) or 0x00 (invalid).
+    ///      Precompile ABI: verify(bytes32, bytes32, uint256, bytes32[32], bytes32) → (bool)
+    ///      Returns ABI-encoded bool.
     function isVerified(bytes32 proofId, bytes32[] calldata merkleProof) external view returns (bool) {
         ProofMeta storage meta = proofMetadata[proofId];
         if (!meta.exists) return false;
@@ -223,55 +214,32 @@ contract ProofRegistry is IProofRegistry {
         bytes32 leafHash = keccak256(abi.encodePacked(proofId, meta.circuitId, meta.publicInputsHash, meta.timestamp));
         bytes32 metadataHash = keccak256(abi.encodePacked(meta.circuitId, meta.publicInputsHash, meta.timestamp));
 
-        // Cache leafIndex in a stack variable to avoid storage access in assembly
-        uint256 metaLeafIndex = meta.leafIndex;
-
-        // Build the 1152-byte precompile input in memory using assembly
-        // to avoid repeated abi.encodePacked allocations in a loop.
-        bytes memory input = new bytes(VERIFY_INPUT_LENGTH);
-
-        assembly {
-            let ptr := add(input, 32) // skip length prefix
-
-            // Store leafHash at offset 0x00
-            mstore(ptr, leafHash)
-
-            // Store metadataHash at offset 0x20
-            mstore(add(ptr, 0x20), metadataHash)
-
-            // Store leafIndex at offset 0x40
-            mstore(add(ptr, 0x40), metaLeafIndex)
-        }
-
-        // Copy merkle proof elements (pad with zeros if fewer than TREE_DEPTH)
+        // Build fixed-size merkle proof array (pad with zeros if fewer than TREE_DEPTH)
+        bytes32[32] memory proof;
         uint256 proofLen = merkleProof.length;
         for (uint256 i; i < TREE_DEPTH;) {
-            bytes32 sibling;
             if (i < proofLen) {
-                sibling = merkleProof[i];
+                proof[i] = merkleProof[i];
             }
-            // else: sibling remains bytes32(0) -- zero hash for empty subtree levels
-
-            assembly {
-                // Offset within input: 32 (length) + 0x60 (header) + i * 32
-                mstore(add(add(add(input, 32), 0x60), mul(i, 32)), sibling)
-            }
-
             unchecked {
                 ++i;
             }
         }
 
-        // Store current root at the final 32-byte slot (offset 0x460)
-        bytes32 root = currentRoot;
-        assembly {
-            mstore(add(add(input, 32), 0x460), root)
-        }
+        // Call MerkleTreeVerify precompile with correct encoding (includes selector)
+        (bool success, bytes memory result) = merkleVerifyPrecompile.staticcall(
+            abi.encodeWithSignature(
+                "verify(bytes32,bytes32,uint256,bytes32[32],bytes32)",
+                leafHash,
+                metadataHash,
+                meta.leafIndex,
+                proof,
+                currentRoot
+            )
+        );
 
-        // Call MerkleTreeVerify precompile
-        (bool success, bytes memory result) = merkleVerifyPrecompile.staticcall(input);
-
-        return success && result.length > 0 && uint8(result[0]) == 0x01;
+        if (!success || result.length < 32) return false;
+        return abi.decode(result, (bool));
     }
 
     /// @inheritdoc IProofRegistry

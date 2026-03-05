@@ -4268,7 +4268,24 @@ checksum = "e320a6c5ad31d271ad523dcf3ad13e2767ad8b1cb8f047f75a8aeaf8da139da2"
 name = "sincerin-collector"
 version = "0.1.0"
 dependencies = [
+ "alloy",
+ "anyhow",
+ "async-nats",
+ "chrono",
+ "config",
+ "futures",
+ "hex",
+ "metrics",
+ "metrics-exporter-prometheus",
+ "serde",
+ "serde_json",
+ "sha2",
  "sincerin-common",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-test",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

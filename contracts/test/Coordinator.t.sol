@@ -268,7 +268,7 @@ contract CoordinatorTest is TestUtils {
 
         // 5. Submit proof as the assigned prover
         vm.prank(prover1);
-        coordinator.submitProof(requestId, DUMMY_PROOF, DUMMY_PUBLIC_INPUTS);
+        coordinator.submitProof(requestId, DUMMY_PROOF, vkMembership, DUMMY_PUBLIC_INPUTS);
 
         // 6. Verify request status is Verified
         ICoordinator.ProofRequest memory req = coordinator.getRequest(requestId);
@@ -305,7 +305,7 @@ contract CoordinatorTest is TestUtils {
 
         // 6. Submit proof
         vm.prank(prover1);
-        coordinator.submitProof(requestId, DUMMY_PROOF, DUMMY_PUBLIC_INPUTS);
+        coordinator.submitProof(requestId, DUMMY_PROOF, vkMembership, DUMMY_PUBLIC_INPUTS);
 
         // 7. Verify status is Failed
         ICoordinator.ProofRequest memory req = coordinator.getRequest(requestId);
@@ -335,7 +335,7 @@ contract CoordinatorTest is TestUtils {
         // prover2 tries to submit -- should revert Unauthorized
         vm.expectRevert(ICoordinator.Unauthorized.selector);
         vm.prank(prover2);
-        coordinator.submitProof(requestId, DUMMY_PROOF, DUMMY_PUBLIC_INPUTS);
+        coordinator.submitProof(requestId, DUMMY_PROOF, vkMembership, DUMMY_PUBLIC_INPUTS);
     }
 
     /// @notice Cannot submit a proof after the request deadline has passed
@@ -356,7 +356,7 @@ contract CoordinatorTest is TestUtils {
 
         vm.expectRevert(ICoordinator.RequestExpired.selector);
         vm.prank(prover1);
-        coordinator.submitProof(requestId, DUMMY_PROOF, DUMMY_PUBLIC_INPUTS);
+        coordinator.submitProof(requestId, DUMMY_PROOF, vkMembership, DUMMY_PUBLIC_INPUTS);
     }
 
     // =========================================================================

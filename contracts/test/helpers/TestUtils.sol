@@ -34,8 +34,8 @@ abstract contract TestUtils is Test {
 
     bytes32 constant CIRCUIT_MEMBERSHIP = keccak256("proof-of-membership");
     bytes32 constant CIRCUIT_AGE = keccak256("proof-of-age");
-    bytes32 constant VK_HASH_MEMBERSHIP = bytes32(uint256(0x0895));
-    bytes32 constant VK_HASH_AGE = bytes32(uint256(0x1bbf));
+    bytes32 constant VK_HASH_MEMBERSHIP = keccak256("dummy-vk-membership");
+    bytes32 constant VK_HASH_AGE = keccak256("dummy-vk-age");
 
     // =========================================================================
     //                          TEST CONTRACTS
@@ -55,6 +55,10 @@ abstract contract TestUtils is Test {
     address public prover2;
     address public requester;
     address public stranger;
+
+    /// @dev VK bytes for unit tests (must hash to VK_HASH constants above)
+    bytes internal vkMembership = bytes("dummy-vk-membership");
+    bytes internal vkAge = bytes("dummy-vk-age");
 
     // =========================================================================
     //                              SETUP
@@ -96,29 +100,29 @@ abstract contract TestUtils is Test {
     //                       PRECOMPILE MOCK HELPERS
     // =========================================================================
 
-    /// @dev Mock VerifyUltraHonk precompile to return success (0x01)
+    /// @dev Mock VerifyUltraHonk precompile to return success (ABI-encoded true)
     function _mockVerifySuccess() internal {
-        vm.mockCall(VERIFY_PRECOMPILE, bytes(""), abi.encode(bytes1(0x01)));
+        vm.mockCall(VERIFY_PRECOMPILE, bytes(""), abi.encode(true));
     }
 
-    /// @dev Mock VerifyUltraHonk precompile to return failure (0x00)
+    /// @dev Mock VerifyUltraHonk precompile to return failure (ABI-encoded false)
     function _mockVerifyFailure() internal {
-        vm.mockCall(VERIFY_PRECOMPILE, bytes(""), abi.encode(bytes1(0x00)));
+        vm.mockCall(VERIFY_PRECOMPILE, bytes(""), abi.encode(false));
     }
 
     /// @dev Mock MerkleTreeInsert precompile to return a root and leaf index
     function _mockMerkleInsert(bytes32 newRoot, uint256 leafIndex) internal {
-        vm.mockCall(MERKLE_INSERT_PRECOMPILE, bytes(""), abi.encodePacked(newRoot, leafIndex));
+        vm.mockCall(MERKLE_INSERT_PRECOMPILE, bytes(""), abi.encode(newRoot, leafIndex));
     }
 
-    /// @dev Mock MerkleTreeVerify precompile to return success (0x01)
+    /// @dev Mock MerkleTreeVerify precompile to return success (ABI-encoded true)
     function _mockMerkleVerifySuccess() internal {
-        vm.mockCall(MERKLE_VERIFY_PRECOMPILE, bytes(""), abi.encode(bytes1(0x01)));
+        vm.mockCall(MERKLE_VERIFY_PRECOMPILE, bytes(""), abi.encode(true));
     }
 
-    /// @dev Mock MerkleTreeVerify precompile to return failure (0x00)
+    /// @dev Mock MerkleTreeVerify precompile to return failure (ABI-encoded false)
     function _mockMerkleVerifyFailure() internal {
-        vm.mockCall(MERKLE_VERIFY_PRECOMPILE, bytes(""), abi.encode(bytes1(0x00)));
+        vm.mockCall(MERKLE_VERIFY_PRECOMPILE, bytes(""), abi.encode(false));
     }
 
     // =========================================================================

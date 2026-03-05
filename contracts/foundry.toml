@@ -8,6 +8,8 @@ optimizer_runs = 10000
 via_ir = false
 ffi = true
 
+fs_permissions = [{ access = "read", path = "../fixtures" }]
+
 [fuzz]
 runs = 1000
 max_test_rejects = 100000

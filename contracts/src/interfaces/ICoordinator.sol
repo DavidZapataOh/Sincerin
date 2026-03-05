@@ -91,8 +91,10 @@ interface ICoordinator {
     /// @notice Submit a proof for verification
     /// @param requestId The proof request to fulfill
     /// @param proof Raw UltraHonk proof bytes
-    /// @param publicInputs ABI-encoded public inputs matching the circuit
-    function submitProof(bytes32 requestId, bytes calldata proof, bytes calldata publicInputs) external;
+    /// @param vk Full verification key bytes (must hash to registered vkHash)
+    /// @param publicInputs Raw public inputs (each 32 bytes = one field element)
+    function submitProof(bytes32 requestId, bytes calldata proof, bytes calldata vk, bytes calldata publicInputs)
+        external;
 
     /// @notice Get details of a proof request
     /// @param requestId The request to query

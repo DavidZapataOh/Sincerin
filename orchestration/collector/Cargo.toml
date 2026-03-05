@@ -2,6 +2,56 @@
 name = "sincerin-collector"
 version.workspace = true
 edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "sincerin-collector"
+path = "src/main.rs"
 
 [dependencies]
 sincerin-common = { path = "../common" }
+
+# Async runtime
+tokio = { workspace = true }
+
+# Message Queue
+async-nats = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Blockchain
+alloy = { workspace = true }
+
+# Observability
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+metrics = { workspace = true }
+metrics-exporter-prometheus = { workspace = true }
+
+# Config
+config = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Crypto
+sha2 = { workspace = true }
+hex = { workspace = true }
+
+# Time
+chrono = { workspace = true }
+
+# Concurrency
+futures = { workspace = true }
+
+[dev-dependencies]
+tokio-test = { workspace = true }
+tokio = { workspace = true, features = ["test-util"] }
+sincerin-common = { path = "../common" }
+serde_json = { workspace = true }
+async-nats = { workspace = true }
+futures = { workspace = true }

@@ -292,8 +292,12 @@ contract Coordinator is ICoordinator {
     ///
     /// @param requestId The proof request to fulfill
     /// @param proof Raw UltraHonk proof bytes from Barretenberg (~2KB)
-    /// @param publicInputs ABI-encoded public inputs matching the circuit
-    function submitProof(bytes32 requestId, bytes calldata proof, bytes calldata publicInputs) external nonReentrant {
+    /// @param vk Full verification key bytes (must hash to registered vkHash)
+    /// @param publicInputs Raw public inputs (each 32 bytes = one field element)
+    function submitProof(bytes32 requestId, bytes calldata proof, bytes calldata vk, bytes calldata publicInputs)
+        external
+        nonReentrant
+    {
         // =================================================================
         //                           CHECKS
         // =================================================================
@@ -303,18 +307,35 @@ contract Coordinator is ICoordinator {
         if (req.assignedProver != msg.sender) revert Unauthorized();
         if (req.deadline <= block.timestamp) revert RequestExpired();
 
-        // Retrieve the verification key hash for this circuit
-        bytes32 vkHash = registeredCircuits[req.circuitId];
+        // Validate the verification key
+        if (keccak256(vk) != registeredCircuits[req.circuitId]) revert InvalidVKHash();
 
         // =================================================================
         //             PRECOMPILE VERIFICATION (staticcall — read-only)
         // =================================================================
-        // The VerifyUltraHonk precompile expects: abi.encode(proof, vkHash, publicInputs)
-        // It returns a single byte: 0x01 for valid, 0x00 for invalid.
-        // staticcall is safe before effects as it cannot modify state.
-        (bool callSuccess, bytes memory result) = verifyPrecompile.staticcall(abi.encode(proof, vkHash, publicInputs));
+        // VerifyUltraHonk ABI: verify(bytes proof, bytes vk, bytes32[] publicInputs)
+        // Returns ABI-encoded bool. staticcall is safe before effects.
+        bool verificationPassed;
+        {
+            // Convert publicInputs (raw bytes) to bytes32[] for precompile
+            uint256 numInputs = publicInputs.length / 32;
+            bytes32[] memory pubInputsArr = new bytes32[](numInputs);
+            for (uint256 i = 0; i < numInputs;) {
+                bytes32 val;
+                assembly {
+                    val := calldataload(add(publicInputs.offset, mul(i, 32)))
+                }
+                pubInputsArr[i] = val;
+                unchecked {
+                    ++i;
+                }
+            }
 
-        bool verificationPassed = callSuccess && result.length > 0 && result[0] == 0x01;
+            (bool callSuccess, bytes memory result) = verifyPrecompile.staticcall(
+                abi.encodeWithSignature("verify(bytes,bytes,bytes32[])", proof, vk, pubInputsArr)
+            );
+            verificationPassed = callSuccess && result.length >= 32 && abi.decode(result, (bool));
+        }
 
         if (!verificationPassed) {
             // =============================================================
